@@ -60,8 +60,8 @@ public class UserDao {
 		
 		public void updateUser(User user)
 		{
-			String updatequery="UPDATE USER_DETAIL SET PASSWORD=? WHERE USER_NAME=?";
-			String updatequery1="update user_details set first_name=?,last_name=?,password=? where user_name=?";
+			String updatequery="UPDATE USER_DETAIL SET PASSWORD=? WHERE  NAME=?";
+			String updatequery1="update user_details set name=?,password=? where email=?";
 			Connection con=ConnectionUtil.getDbConnection();
 			PreparedStatement pstmt=null;
 			try
@@ -71,9 +71,8 @@ public class UserDao {
 				pstmt.executeUpdate();
 				System.out.println("value update successfully");
 				pstmt.setString(1, user.getName());
-				pstmt.setString(2, user.getEmailId());
-				pstmt.setString(3, user.getPassword());
-				pstmt.setLong(4, user.getMobileNumber());
+				pstmt.setString(2, user.getPassword());
+				pstmt.setString(3, user.getName());
 				int i=pstmt.executeUpdate();
 				System.out.println(i+" user profile updated");
 			}

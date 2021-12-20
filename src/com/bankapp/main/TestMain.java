@@ -16,13 +16,14 @@ public class TestMain {
 				System.out.println("\n1.Register\n2.Login\n");
 		        System.out.println("Enter your choice");
 			    int choice = Integer.parseInt(sc.nextLine());
-			
+			 
 
 		switch (choice) {
 		case 1:
+			String name,password,email=null;
 			userDao = new UserDao();
 			System.out.println("Enter Name:");
-			String name = sc.nextLine();
+			 name = sc.nextLine();
 			do {
 				if (name.matches("[A-Za-z]{5,}")) {
 					flag = 0;
@@ -33,7 +34,7 @@ public class TestMain {
 				flag = 1;
 			} while (flag == 1);
 			System.out.println("Enter Email");
-			String email = sc.nextLine();
+			 email = sc.nextLine();
 			do {
 				if (email.matches("[a-z0-9]+[@][a-z]+[.][a-z]+{8,15}")) {
 					flag = 0;
@@ -44,7 +45,7 @@ public class TestMain {
 				flag = 1;
 			} while (flag == 1);
 			System.out.println("enter password:");
-			String password = sc.nextLine();
+			  password = sc.nextLine();
 			do {
 				if (password.matches("[A-Za-z0-9]{8,10}")) {
 					flag = 0;
@@ -119,6 +120,9 @@ public class TestMain {
 			}
 			 
 		case 3:
+			 name=null;
+			 password=null;
+			 emailId=null;
              System.out.println("Update Your Profile");
 			userDao = new UserDao();
 			do {
@@ -133,21 +137,11 @@ public class TestMain {
 				}
 			} while (flag == 1);
 
-			do {
-				System.out.println("Enter  email u want to change :");
-				 email = sc.nextLine();
-				if ( email.matches("[a-z]+[0-9.]+[@][a-z]+[.][a-z]+{8,15}")) {
-					flag = 0;
-					break;
-				} else {
-					System.out.println("Enter valid email");
-					flag = 1;
-				}
-			} while (flag == 1);
+			 
 
 			do {
 				System.out.println("Enter new Password  :");
-				password = sc.nextLine();
+				   password = sc.nextLine();
 				if (password.matches("[A-Z]+[a-z]+[0-9]+[@#.]+{8,10}")) {
 					flag = 0;
 					break;
@@ -157,9 +151,7 @@ public class TestMain {
 				}
 			} while (flag == 1);
 
-			 
-
-			do {
+			 do {
 				System.out.println("Enter Confirm Password:");
 			     String	Confirmpassword = sc.nextLine();
 				if (password.equals(Confirmpassword)) {
@@ -170,11 +162,13 @@ public class TestMain {
 					flag = 1;
 				}
 			} while (flag == 1);
+	 	 
+			 
 
-			user = new User(name,email,password,mobile);
-			userdao.updateUser(user);
+	 		User user1 = new User(name,password,emailId); 
+			userdao.updateUser(user1);
 		default:
-			System.out.println("Invalid Choice ");
+			System.out.println("Invalid Choice");
 			System.exit(0);
 
 		}
