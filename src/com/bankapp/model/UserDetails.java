@@ -2,11 +2,11 @@ package com.bankapp.model;
 
 import java.util.Objects;
 
-public class User {
+public class UserDetails {
 	 private String name;
 	 private String emailId;
      private String password;
-	 private long mobileNumber;
+	 private long mobile_Number;
 	public String getName() {
 		return name;
 	}
@@ -15,7 +15,7 @@ public class User {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(mobileNumber, emailId, name, password);
+		return Objects.hash(mobile_Number, emailId, name, password);
 	}
 	@Override
 	public boolean equals(Object obj) {
@@ -25,23 +25,23 @@ public class User {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
-		return mobileNumber == other.mobileNumber && Objects.equals(emailId, other.emailId)
+		UserDetails other = (UserDetails) obj;
+		return mobile_Number == other.mobile_Number && Objects.equals(emailId, other.emailId)
 				&& Objects.equals(name, other.name) && Objects.equals(password, other.password);
 	}
 	@Override
 	public String toString() {
 		return "User [name=" + name + ", emailId=" + emailId + ", password=" + password + ", MobileNumber="
-				+ mobileNumber + "]";
+				+ mobile_Number + "]";
 	}
-	public User(String name, String emailId, String password, long mobileNumber) {
+	public UserDetails(String name, String emailId, String password, long mobileNumber) {
 		super();
 		this.name = name;
 		this.emailId = emailId;
 		this.password = password;
 		mobileNumber = mobileNumber;
 	}
-	public User() {
+	public UserDetails() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -58,7 +58,7 @@ public class User {
 		this.password = password;
 	}
 	public long getMobileNumber() {
-		return mobileNumber;
+		return mobile_Number;
 	}
 	public void setMobileNumber(long mobileNumber) {
 		mobileNumber = mobileNumber;
