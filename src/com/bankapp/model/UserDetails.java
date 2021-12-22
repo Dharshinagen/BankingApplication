@@ -31,15 +31,15 @@ public class UserDetails {
 	}
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", emailId=" + emailId + ", password=" + password + ", MobileNumber="
-				+ mobile_Number + "]";
+		return "Name : " + name +"  "+ "EmailId : " + emailId +"  "+ "Password : " + password+" " + "MobileNumber : "
+				+ mobile_Number ;
 	}
 	public UserDetails(String name, String emailId, String password, long mobileNumber) {
 		super();
 		this.name = name;
 		this.emailId = emailId;
 		this.password = password;
-		mobileNumber = mobileNumber;
+		this.mobile_Number = mobileNumber;
 	}
 	public UserDetails() {
 		super();

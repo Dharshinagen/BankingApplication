@@ -1,6 +1,7 @@
 package com.bankapp.dao;
  
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,5 +42,36 @@ public class AccountDetailsDao {
 			System.out.println("Statement Error");
 		}
 		return  list; 
+	}
+	public  void updateUserDetailAdmin(String email,long mobilenumber,String email1) {
+
+		String updatequery1 = "update account_details set email=?,mobile_number=? where email=?";
+		Connection con = ConnectionUtil.getDbConnection();
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(updatequery1);
+			pstmt.setString(1,email);
+			pstmt.setLong(2,mobilenumber);
+			pstmt.setString(3,email1);
+			int i = pstmt.executeUpdate();
+			System.out.println(i + " user profile updated");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("values not updated");
+			System.out.println("something went wrong");
+		}
+	}
+	public void deleteDetails( long  accountnum) {
+		String deleteQuery="delete from  account_details where  account_number=?";
+		Connection con=ConnectionUtil.getDbConnection();
+		 try {
+			PreparedStatement pst= con.prepareStatement(deleteQuery);
+			pst.setLong(1,  accountnum);
+			int i=pst.executeUpdate();
+			System.out.println(i+"row deleted");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

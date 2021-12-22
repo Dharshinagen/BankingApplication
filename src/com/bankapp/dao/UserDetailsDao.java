@@ -1,104 +1,130 @@
 package com.bankapp.dao;
 
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.bankapp.model.UserDetails;
 
 public class UserDetailsDao {
 	public void insertUser(UserDetails user) {
-		String insertQuery="insert into USER_DETAILS(NAME,EMAIL,PASSWORD,MOBILE_NUMBER) VALUES (?,?,?,?)";
-		
-		ConnectionUtil conUtil=new ConnectionUtil();
-		Connection con=conUtil.getDbConnection();
-		PreparedStatement pst=null;
-		 
-			try {
-				pst=con.prepareStatement(insertQuery);
-				pst.setString(1,user.getName());
-				pst.setString(2,user.getEmailId());
-				pst.setString(3,user.getPassword());
-				pst.setLong(4,user.getMobileNumber());
-				pst.executeUpdate();
-				System.out.println("Value Inserted Successfully");
-				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.out.println("Value not inserted");
-				
-			}
+		String insertQuery = "insert into USER_DETAILS(NAME,EMAIL,PASSWORD,MOBILE_NUMBER) VALUES (?,?,?,?)";
+
+		Connection con = ConnectionUtil.getDbConnection();
+		PreparedStatement pst = null;
+
+		try {
+			pst = con.prepareStatement(insertQuery);
+			pst.setString(1, user.getName());
+			pst.setString(2, user.getEmailId());
+			pst.setString(3, user.getPassword());
+			pst.setLong(4, user.getMobileNumber());
+			pst.executeUpdate();
+			System.out.println("Value Inserted Successfully");
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Value not inserted");
+
+		}
 	}
-		public  UserDetails validateUser(String emailId,String password)
-		{
-			String ValidateQuery="select  * from USER_DETAILS where role='USER'and email='"+emailId+"' and password='"+password+"'";
-			Connection con=ConnectionUtil.getDbConnection();
-			UserDetails user=null;
-			 try {
-				 Statement st=con.createStatement();
-					ResultSet rs=st.executeQuery(ValidateQuery);
-					if(rs.next())
-					{
-						user=new UserDetails(rs.getString(2),emailId,password,rs.getLong(5));
-					}
-					else {
-						System.out.println("Not a valid user");
-					}
-				
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.out.println("Statement Error");
+
+	public UserDetails validateUser(String emailId, String password) {
+		String ValidateQuery = "select * from USER_DETAILS where role='USER' and email='" + emailId + "' and password='"
+				+ password + "'";
+		Connection con = ConnectionUtil.getDbConnection();
+		UserDetails user = null;
+		try {
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(ValidateQuery);
+			if (rs.next()) {
+				user = new UserDetails(rs.getString(2), emailId, password, rs.getLong(5));
 			}
-			return user;
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Statement Error");
 		}
-			
+		return user;
+	}
+
+	public  void updateUser(String name,String password,String email) {
+
+		String updatequery1 = "update user_details set name=?,password=? where email=?";
+		Connection con = ConnectionUtil.getDbConnection();
+
+		try {
+			PreparedStatement pstmt = con.prepareStatement(updatequery1);
+			pstmt.setString(1,name);
+			pstmt.setString(2,password);
+			pstmt.setString(3,email);
+			int i = pstmt.executeUpdate();
+			System.out.println(i + " user profile updated");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println("values not updated");
+			System.out.println("something went wrong");
+		}
+		 
+	}
+
+	public UserDetails admin(String email_id, String password) {
+		String AdminQuery = "select * from user_details where role='ADMIN' and email='" + email_id + "'and password='"
+				+ password + "'";
+
+		Connection con = ConnectionUtil.getDbConnection();
+		UserDetails user1 = null;
+		try {
+			Statement stm = con.createStatement();
+			ResultSet rs = stm.executeQuery(AdminQuery);
+			if (rs.next()) {
+				user1 = new UserDetails(rs.getString(2), email_id, password, rs.getLong(5));
+			}
+
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return user1;
+	}
+	public List<UserDetails> viewUser(){
+		List<UserDetails> userList=new ArrayList<UserDetails>();
+		String view="select * from User_details where role='USER'";
+		Connection con=ConnectionUtil.getDbConnection();
+		 try {
+			Statement st=con.createStatement();
+			ResultSet rs=st.executeQuery(view);
+			while(rs.next()) {
+				UserDetails user=new UserDetails(rs.getString(2),rs.getString(3),rs.getString(4),rs.getLong(5));
+				userList.add(user);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		public  UserDetails updateUser(UserDetails user )
-		{
-			 
-			String updatequery1="update user_details set name=?,password=? where email=?";
-			Connection con=ConnectionUtil.getDbConnection();
-			
-			try
-			{
-				PreparedStatement pstmt=con.prepareStatement(updatequery1);
-				pstmt.setString(1, user.getName());
-				pstmt.setString(2, user.getPassword());
-				pstmt.setString(3, user.getEmailId());
-				int i=pstmt.executeUpdate();
-				System.out.println(i+" user profile updated");
-			}
-			catch(SQLException e)
-			{
-				e.printStackTrace();
-				System.out.println("values not updated");
-				System.out.println("something went wrong");
-			}
-			return user;
+		return userList;
+	}
+	public void deleteDetails(String email) {
+		String deleteQuery="delete from user_details where email=?";
+		Connection con=ConnectionUtil.getDbConnection();
+		 try {
+			PreparedStatement pst= con.prepareStatement(deleteQuery);
+			pst.setString(1, email);
+			int i=pst.executeUpdate();
+			System.out.println(i+"row deleted");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		public UserDetails admin(String email_id,String password)
-		{
-			String AdminQuery="select * from users where role='admin'and email_id='"+email_id+"'and password='"+password+"'";
-			
-			Connection con=ConnectionUtil.getDbConnection();
-			UserDetails user=null;
-			try {
-				Statement stm =con.createStatement();
-				ResultSet rs=stm.executeQuery(AdminQuery);
-				if(rs.next())
-				{
-					 user=new UserDetails(rs.getString(2), email_id, password,rs.getLong(5));
-				}
-			} catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return user;
-		}
-}
+	}
 	
+		 
+	}
+

@@ -139,10 +139,10 @@ public class AccountDetails {
 	}
 	@Override
 	public String toString() {
-		return "AccountDetails"+ "\n Account Type : " + account_type + "\nAccount Holder name : "
-				+ account_Holder_name + " \n Address : " + address + "\n City=" + city + " \n Pincode : " + pincode + "\n Dob : "
-				+ dob + "\n Mobile Number : " + mobile_Number + "\n EmailId:" + email + "\nIFSC Code : " + ifsc_Code
-				+ "\nBranchName : " + branchName + "\nBalance=" + balance ;
+		return "\t AccountDetails\n"+ "\nAccount Type : " + account_type + "\nAccount Holder name : "
+				+ account_Holder_name + "\nAddress : " + address + "\nCity : " + city + "\nPincode : " + pincode + "\nDob : "
+				+ dob + "\nMobile Number : " + mobile_Number + "\nEmailId:" + email + "\nIFSC Code : " + ifsc_Code
+				+ "\nBranchName : " + branchName + "\nBalance : " + balance ;
 	}
 	 
 	 

@@ -6,6 +6,7 @@ import java.util.Scanner;
 import com.bankapp.model.AccountDetails;
 import com.bankapp.model.UserDetails;
 import com.bankapp.dao.AccountDetailsDao;
+import com.bankapp.dao.TransactionDao;
 import com.bankapp.dao.UserDetailsDao;
 
 public class TestMain {
@@ -137,12 +138,15 @@ public class TestMain {
 				        flag = 1;
 					  }
 			} while (flag == 1);
-			UserDetails validUser = userDao.validateUser(emailId,password);
+			do
+			{
 			UserDetails ValidAdmin=userDao.admin(emailId,password);
+			UserDetails validUser =userDao.validateUser(emailId,password);
+		
 			if (validUser != null)
 			   {
 				System.out.println("WELCOME\t" + validUser.getName() + "!");
-            	System.out.println("\n1.VIEW ACCOUNT DETAIL \n 2.UPDATE YOUR PROFILE");
+            	System.out.println("\n1.VIEW ACCOUNT DETAIL \n2.UPDATE YOUR PROFILE \n3.Transaction");
 				System.out.println("ENTER YOUR CHOICE");
                 int Choice = Integer.parseInt(sc.nextLine());
 				switch (Choice) 
@@ -199,24 +203,11 @@ public class TestMain {
 						   else
 						      {
 							  System.out.println("Enter valid   name");
+							  name = sc.nextLine();
 							  flag = 1;
 						      }
 					   } while (flag == 1);
-					   System.out.println("Enter Email");
-					   email = sc.nextLine();
-					   do {
-						  if (email.matches("[a-z0-9]+[@][a-z]+[.][a-z]+{8,15}")) 
-						     {
-							  flag = 0;
-							  break;
-						     }
-						  else
-							{
-							  System.out.println("Enter valid email ");
-							  email = sc.nextLine();
-						      flag = 1;
-							}
-					  } while (flag == 1);
+					   
 				      System.out.println("Enter new Password  :");
 					  password = sc.nextLine();
 					  do {
@@ -228,6 +219,7 @@ public class TestMain {
 						  else
 						   {
 							System.out.println("Enter valid password");
+							password = sc.nextLine();
 							flag = 1;
 						   }
 			          } while (flag == 1);
@@ -241,28 +233,187 @@ public class TestMain {
 						   }
 						   else {
 							 System.out.println("pls enter confirm password same as password");
+							 Confirmpassword = sc.nextLine();
 						     flag = 1;
 		                        }
 					} while (flag == 1);
-					System.out.println("Enter Mobile Number");
-					mobile = sc.nextLine();
-					do {
-						if (mobile.matches("[6-9][0-9]{9}")) {
-							flag = 0;
-							break;
-						    }
-						else
-					    	{
-							System.out.println("Enter valid Phone no:");
-						    mobile = sc.nextLine();
-						    flag = 1;
-					    	}
-					  } while (flag == 1);
-					long mobileNum = Long.parseLong(mobile);
-
-					UserDetails user1 = new UserDetails(name, password, emailId, mobileNum);
-					userDao.updateUser(user1);
+					System.out.println("Enter Email");
+					 email = sc.nextLine();
+					 userDao.updateUser(name,password,email);
 					break;
+				case 3:
+				 TransactionDao	 transDao = new TransactionDao();
+					System.out.println("Transaction");
+					System.out.println("\n1.Deposit Amount \n2. Withdraw Amount \n3.View Balance" );
+					System.out.println("Enter Your Choice");
+					choice = Integer.parseInt(sc.nextLine());
+					    switch(choice) {
+					         case 1:
+					        	   System.out.println("Enter your name");
+					        	   name=sc.nextLine();
+					        	   do {
+					 				      if (name.matches("[A-Za-z]{5,}"))
+					 				        {
+					 					       flag = 0;
+					 				           break;
+					 				        } 
+					 				      else {
+					 					       System.out.println("Enter valid name ");
+					 				           name = sc.nextLine();
+					 				           flag = 1;
+					 				           } 
+					 			      } while (flag == 1);
+					        	   System.out.println("Enter your Account number:");
+					        	   String account_number=sc.nextLine();
+					        	   do {
+									      if (account_number.matches("[0-9]{12}"))
+									         {
+										      flag = 0;
+										      break;
+									         }
+									      else {
+										     System.out.println("Enter valid AccountNo: ");
+										     accNumber = sc.nextLine();
+										     flag = 1;
+									         }
+								     } while (flag == 1);
+							    	 long Sender_accuntNo = Long.parseLong(account_number);
+					        	     System.out.println("Enter the Amount to DEposit");
+					        	     double amount=Double.parseDouble(sc.nextLine());
+					        	     do {
+					        	    	     if(amount>=200)
+					        	    	     {
+					        	    	    	 flag=0;
+					        	    	    	 break;
+					        	    	     }
+					        	    	     else
+					        	    	     {
+					        	    	    	 System.out.println("Enter Amount Greater Than 200");
+					        	    	    	 System.out.println("Enter the Amount to Deposit");
+									        	 amount=sc.nextDouble();
+									        	  flag=1;
+					        	    	     }
+					        	     }while(flag==1);
+					        	      System.out.println("Enter Pin Number");
+					        	      pinNo = sc.nextLine();
+								      do {
+									         if (pinNo.matches("[0-9]{4}"))
+									          {
+										         flag = 0;
+									 	         break;
+									          } 
+									         else {
+										          System.out.println("Enter valid Pin Number: ");
+										          pinNo = sc.nextLine();
+										          flag = 1;
+									              }
+			     					  } while (flag == 1);
+								      int pin_Number = Integer.parseInt(pinNo);
+					        	      System.out.println("Enter the Receiver Account number  :");
+					        	      String receiver_Account_Number=sc.nextLine();
+					        	      do {
+									         if (receiver_Account_Number.matches("[0-9]{12}"))
+									          {
+										        flag = 0;
+										        break;
+									          }
+									         else {
+										          System.out.println("Enter valid AccountNo: ");
+										          accNumber = sc.nextLine();
+										          flag = 1;
+									              }
+								      } while (flag == 1);
+							    	  long  receiver_AccountNo = Long.parseLong(receiver_Account_Number );
+							    	  transDao.depositAmount(Sender_accuntNo,amount,pin_Number,receiver_AccountNo );
+					        	   
+					        	      break;
+					         case 2:
+					        	      System.out.println("Withdraw Amount");
+					        	      System.out.println("Enter Account Number");
+					        	      String account_Number=sc.nextLine();
+					        	      do {
+									         if (account_Number.matches("[0-9]{12}"))
+									          {
+										        flag = 0;
+										        break;
+									          }
+									         else {
+										          System.out.println("Enter valid AccountNo: ");
+										          accNumber = sc.nextLine();
+										          flag = 1;
+									              }
+								      } while (flag == 1);
+							    	  long  acc_num = Long.parseLong(account_Number);
+								        System.out.println("Enter the Amount to withdraw");
+						        	     amount=sc.nextDouble();
+						        	     do {
+						        	    	     if(amount>=500)
+						        	    	     {
+						        	    	    	 flag=0;
+						        	    	    	 break;
+						        	    	     }
+						        	    	     else
+						        	    	     {
+						        	    	    	 System.out.println("Enter Amount Greater Than 500");
+						        	    	    	 System.out.println("Enter the Amount to DEposit");
+										        	 amount=sc.nextDouble();
+										        	  flag=1;
+						        	    	     }
+						        	     }while(flag==1);
+						        	      System.out.println("Enter Pin Number");
+						        	      pinNo = sc.nextLine();
+									      do {
+										         if (pinNo.matches("[0-9]{4}"))
+										          {
+											         flag = 0;
+										 	         break;
+										          } 
+										         else {
+											          System.out.println("Enter valid Pin Number: ");
+											          pinNo = sc.nextLine();
+											          flag = 1;
+										              }
+				     					  } while (flag == 1);
+									        pin_Number = Integer.parseInt(pinNo);
+									        transDao.withdrawAmount(acc_num, amount, pin_Number);
+									        
+					        	      break;
+					         case 3:
+					        	 System.out.println("View Acccount Balance");
+					        	 System.out.println("Enter Account Number");
+				        	      account_Number=sc.nextLine();
+				        	      do {
+								         if (account_Number.matches("[0-9]{12}"))
+								          {
+									        flag = 0;
+									        break;
+								          }
+								         else {
+									          System.out.println("Enter valid AccountNo: ");
+									          accNumber = sc.nextLine();
+									          flag = 1;
+								              }
+							      } while (flag == 1);
+						    	  long  acc_number = Long.parseLong(account_Number);
+						    	  System.out.println("Enter Pin Number");
+				        	      pinNo = sc.nextLine();
+							      do {
+								         if (pinNo.matches("[0-9]{4}"))
+								          {
+									         flag = 0;
+								 	         break;
+								          } 
+								         else {
+									          System.out.println("Enter valid Pin Number: ");
+									          pinNo = sc.nextLine();
+									          flag = 1;
+								              }
+		     					  } while (flag == 1);
+							        pin_Number = Integer.parseInt(pinNo);
+							        
+					        	 break;
+					    }
+					  break;
 				 }
 				 
 			   } //if current user
@@ -270,16 +421,110 @@ public class TestMain {
 			 else if(ValidAdmin !=null) 
 			 {
 				  System.out.println("WELCOME\t" + ValidAdmin.getName() + "!");
-	            	System.out.println("\n1.VIEW ALL REGISTERED USER  \n 2.DELETE USER \n 3.UPDATE ACCOUNT DETAILS");
+	            	System.out.println("\n1.VIEW ALL REGISTERED USER  \n2.DELETE USER \n3.UPDATE ACCOUNT DETAILS \n4.DELETE ACCOUNT");
 					System.out.println("ENTER YOUR CHOICE");
 	                int Choice = Integer.parseInt(sc.nextLine());
+	                userDao=null;
 					switch (Choice) 
 					 {
 	    			  case 1:
-	    				      
+	    				    userDao =new UserDetailsDao();
+	    				    List<UserDetails> userList= userDao.viewUser();
+	    				    for(int i=0;i< userList.size();i++) {
+	    				    	System.out.println(userList.get(i));
+	    				    }
 	    				    break;
+	    			  case 2:
+	    				 userDao = new UserDetailsDao();
+	    				 System.out.println("enter email to delete: ");
+	    				 String email1 =sc.nextLine();
+	    				 userDao.deleteDetails(email1);
+	    				 
+	    				break;
+	    			  case 3:
+	    				  System.out.println("Update User Account Details");
+	    				  System.out.println("Enter  EmailId to be updated");
+	    					emailId = sc.nextLine();
+
+	    					do {
+	    						    if (emailId.matches("[a-z]+[0-9.]+[@][a-z]+[.][a-z]+{8,15}"))
+	    						     {
+	    		          				flag = 0;
+	    							    break;
+	    						     }
+	    						    else
+	    							 {
+	    						    	System.out.println("Enter valid email ");
+	    								emailId = sc.nextLine();
+	    						        flag = 1;
+	    							 }
+	    					} while (flag == 1);
+	    					System.out.println("Enter Mobile Number to be updated:");
+	    					 mobile = sc.nextLine();
+	    					do {
+	    						   if (mobile.matches("[6-9][0-9]{9}"))
+	    						    {
+	    							  flag = 0;
+	    							  break;
+	    						    }
+	    						   else
+	    							{
+	    							   System.out.println("Enter valid mobile no:");
+	    						       mobile = sc.nextLine();
+	    						       flag = 1;
+	    							}
+	    					} while (flag == 1);
+	    					long mobileNum = Long.parseLong(mobile);
+	    					System.out.println("Enter  Previous EmailId ");
+	    					 String email_Id = sc.nextLine();
+
+	    					do {
+	    						    if (email_Id.matches("[a-z]+[0-9.]+[@][a-z]+[.][a-z]+{8,15}"))
+	    						     {
+	    		          				flag = 0;
+	    							    break;
+	    						     }
+	    						    else
+	    							 {
+	    						    	System.out.println("Enter valid email ");
+	    								email_Id = sc.nextLine();
+	    						        flag = 1;
+	    							 }
+	    					} while (flag == 1);
+	    					AccountDetailsDao accountDetailDao=new AccountDetailsDao();
+	    					accountDetailDao.updateUserDetailAdmin(emailId, mobileNum, email_Id);
+	    				   break;
+	    			  case 4:
+	    				  System.out.println("Delete Account");
+	    				  System.out.println("Enter the Account Number to delete");
+	    				  String  account_number=sc.nextLine();
+			        	   do {
+							      if (account_number.matches("[0-9]{12}"))
+							         {
+								      flag = 0;
+								      break;
+							         }
+							      else {
+								     System.out.println("Enter valid AccountNo: ");
+								     account_number= sc.nextLine();
+								     flag = 1;
+							         }
+						     } while (flag == 1);
+					    	 long  accuntNo = Long.parseLong(account_number);
+					    	 AccountDetailsDao accountDetailDao1=new AccountDetailsDao();
+					    	 accountDetailDao1.deleteDetails(accuntNo);
+	    				  
+	    				  break;
 					 }
 			 }
+			 else
+				 System.out.println("Not a Valid user");
+				 flag=0;
+			break; 
+			}while(flag==0);
+			break;
+		 
+			
 		default:
 			System.out.println("Invalid Choice");
 			System.exit(0);
