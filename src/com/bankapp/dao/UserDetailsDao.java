@@ -44,7 +44,8 @@ public class UserDetailsDao {
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery(ValidateQuery);
 			if (rs.next()) {
-				user = new UserDetails(rs.getString(2), emailId, password, rs.getLong(5));
+				user = new UserDetails(rs.getInt(1), rs.getString(2), emailId, password, rs.getLong(5),
+						rs.getLong(7));
 			}
 
 		} catch (SQLException e) {
@@ -85,7 +86,8 @@ public class UserDetailsDao {
 			Statement stm = con.createStatement();
 			ResultSet rs = stm.executeQuery(AdminQuery);
 			if (rs.next()) {
-				user1 = new UserDetails(rs.getString(2), email_id, password, rs.getLong(5));
+				user1 = new UserDetails(rs.getInt(1), rs.getString(2), email_id, password, rs.getLong(5),
+						rs.getLong(7));;
 			}
 
 		} catch (SQLException e) {
@@ -102,7 +104,8 @@ public class UserDetailsDao {
 			Statement st=con.createStatement();
 			ResultSet rs=st.executeQuery(view);
 			while(rs.next()) {
-				UserDetails user=new UserDetails(rs.getString(2),rs.getString(3),rs.getString(4),rs.getLong(5));
+				UserDetails user=new UserDetails(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getLong(5),
+						rs.getLong(7));;
 				userList.add(user);
 			}
 		} catch (SQLException e) {

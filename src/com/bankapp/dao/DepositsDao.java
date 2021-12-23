@@ -1,9 +1,11 @@
 package com.bankapp.dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class DepositsDao {
  public   double getInterest(double descriptionId) {
@@ -23,33 +25,31 @@ public class DepositsDao {
 	}
 	return 0;
  }
- public void fixedDeposit(String type,double amount,double rate_of_interest,double maturity_value,double period,String status) {
+ public void fixedDeposit(String type,double amount,double rate_of_interest,double maturity_value,long period,String status, long userId) {
 	 Connection con = ConnectionUtil.getDbConnection();
-	 String Query="INSERT INTO DEPOSITS (DEPOSIT_TYPE,AMOUNT,TENURE,RATE_OF_INTEREST,MATURITY_DATE,MATURITY_VALUE,DEPOSIT_STATUS) VALUES(?,?,?,?,?,?,?)";
-	  
-	String date="select extract(YEAR FROM Sysdate) from  dual";
-  System.out.println(date);
-	 ResultSet rs=null;
-	 int maturity_date=0;
-	
+	 String que="select deposit_acc.nextval from dual";
+	 String Query="INSERT INTO DEPOSITS (USER_ID,ACCOUNT_NUMBER,DEPOSIT_TYPE,AMOUNT,TENURE,RATE_OF_INTEREST,MATURITY_DATE,MATURITY_VALUE,DEPOSIT_STATUS) VALUES(?,?,?,?,?,?,?,?,?)";
+	 LocalDate sysDate=LocalDate.now();
+     Date mdate = Date.valueOf( sysDate.plusYears(period));
+	long accNumber = 0;
 	 try {
-		PreparedStatement pstmt = con.prepareStatement(date);
-		rs = pstmt.executeQuery();
-		if(rs.next()) {
-			System.out.println(rs.getString(1));
-			  maturity_date= (int)(period) +(Integer.parseInt(rs.getString(1))) ;
-			  System.out.println(maturity_date);
-		}
-		//pstmt.setLong(1,acc_number);
-		pstmt.setString(1,type);
-		pstmt.setDouble(2,amount);
-		pstmt.setDouble(3,period);
-		pstmt.setDouble(4,rate_of_interest);
-		pstmt.setInt(5,maturity_date);
-		pstmt.setDouble(6,maturity_value);
-		pstmt.setString(7, status);
-		int i=pstmt.executeUpdate();
-		System.out.println(i+"Inserted");
+		 
+		PreparedStatement pstmt = con.prepareStatement(que);
+		ResultSet rs = pstmt.executeQuery();
+		if(rs.next())
+			accNumber = rs.getLong(1);
+		pstmt = con.prepareStatement(Query);
+		pstmt.setLong(1, userId);
+		pstmt.setLong(2, accNumber);
+		pstmt.setString(3,type);
+		pstmt.setDouble(4,amount);
+		pstmt.setDouble(5,period);
+		pstmt.setDouble(6,rate_of_interest);
+		pstmt.setDate(7, mdate);
+		pstmt.setDouble(8,maturity_value);
+		pstmt.setString(9, status);
+		pstmt.executeUpdate();
+		System.out.println( "Requested");
 		
 		
 	} catch (SQLException e) {
@@ -57,28 +57,32 @@ public class DepositsDao {
 		e.printStackTrace();
 	}
  }
-	 public void recurringDeposit(long acc_number,double amount,double rate_of_interest,double maturity_value,double period) {
+	 public void recurringDeposit(String type, long amount, long period,double rate_of_interest,double maturity_value,String status, long userId) {
 		 Connection con = ConnectionUtil.getDbConnection();
-		 String Query="INSERT INTO DEPOSITS (DEPOSIT_TYPE,AMOUNT,TENURE,RATE_OF_INTEREST,MATURITY_DATE,MATURITY_VALUE,DEPOSIT_STATUS) VALUES('RECURRINGDEPOSIST',?,?,?,?,?,'NOT DEPOSITED')";
+		 String que="select deposit_acc.nextval from dual";
+		 String Query="INSERT INTO DEPOSITS (USER_ID,ACCOUNT_NUMBER,DEPOSIT_TYPE,AMOUNT,TENURE,RATE_OF_INTEREST,MATURITY_DATE,MATURITY_VALUE,DEPOSIT_STATUS) VALUES(?,?,?,?,?,?,?,?,?)";
 		  
-		 String date="select extract(YEAR FROM DATE_OF_DEPOSIT) from deposits";
-		 ResultSet rs=null;
-		 String maturity_date=null;
+		 LocalDate sysDate=LocalDate.now();
+	     Date mdate = Date.valueOf( sysDate.plusYears(period));
+	     long accNumber = 0;
 		
 		 try {
-			PreparedStatement pstmt = con.prepareStatement(date);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				  maturity_date= period + rs.getString( date);
-			}
-			//pstmt.setLong(1,acc_number);
-			pstmt.setDouble(1,amount);
-			pstmt.setDouble(2,period);
-			pstmt.setDouble(3, rate_of_interest);
-			pstmt.setString(4,maturity_date);
-			pstmt.setDouble(5,maturity_value);
-			pstmt.executeQuery();
-			System.out.println("Inserted");
+			 PreparedStatement pstmt = con.prepareStatement(que);
+				ResultSet rs = pstmt.executeQuery();
+				if(rs.next())
+					accNumber = rs.getLong(1);
+			 pstmt = con.prepareStatement(Query);		  
+			 pstmt.setLong(1, userId);
+				pstmt.setLong(2, accNumber);
+				pstmt.setString(3,type);
+				pstmt.setDouble(4,amount);
+				pstmt.setDouble(5,period);
+				pstmt.setDouble(6,rate_of_interest);
+				pstmt.setDate(7, mdate);
+				pstmt.setDouble(8,maturity_value);
+				pstmt.setString(9, status);
+			pstmt.executeUpdate();
+			System.out.println("Requested");
 			
 			
 		} catch (SQLException e) {

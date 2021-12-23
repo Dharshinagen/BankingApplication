@@ -1,5 +1,7 @@
 package com.bankapp.main;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,11 +20,11 @@ public class TestMain {
 		Scanner sc = new Scanner(System.in);
 		UserDetailsDao userDao = null;
 		int flag;
+		int user_id=0;
 		System.out.println("\t WELCOME TO INDIAN BANK");
 		System.out.println("\n1.Register\n2.Login\n");
 		System.out.println("Enter your choice");
 		int choice = Integer.parseInt(sc.nextLine());
-
 		switch (choice) {
 		case 1:
 			String name, password, email = null;
@@ -104,7 +106,7 @@ public class TestMain {
 			long mobileNumber = Long.parseLong(mobile);
 			AccountDetailsDao accountsDao = new AccountDetailsDao();
 			String id = accountsDao.getUserId(email);
-			if(null !=id)
+			if( id !=null )
 			{
 				Long account_id = Long.parseLong(id);
 				UserDetails user = new UserDetails(name, email, password, mobileNumber, account_id);
@@ -119,6 +121,7 @@ public class TestMain {
 			System.out.println("Login");
 			System.out.println("Enter Registered Email");
 			String emailId = sc.nextLine();
+			
 
 			do {
 				    if (emailId.matches("[a-z]+[0-9.]+[@][a-z]+[.][a-z]+{8,15}"))
@@ -156,6 +159,7 @@ public class TestMain {
 		
 			if (validUser != null)
 			   {
+				user_id=validUser.getUser_id();
 				System.out.println("WELCOME\t" + validUser.getUser_name() + "!");
             	System.out.println("\n1.VIEW ACCOUNT DETAIL \n2.UPDATE YOUR PROFILE \n3.Transaction \n4.DepositType \n5.Loans");
 				System.out.println("ENTER YOUR CHOICE");
@@ -425,39 +429,23 @@ public class TestMain {
 							       System.out.println("BALANCE : "+balance);
 					        	 break;
 					    }
-					  break;
+					    break;
 				case 4:
 					 System.out.println("Deposit Type");
 					 System.out.println("1.FIXED DEPOSIT \n2.RECURRING DEPOSIT");
 					 System.out.println("Enter your Choice");
 					 DepositsDao depositDao=new DepositsDao();
-					  
 					  Choice =Integer.parseInt(sc.nextLine());
 					   switch(Choice)
 					   {
 					   case 1:
 						   String type="Fixed Deposit";
-						   String status="not deposited";
+						   String status="not approved";
 						    double rate_of_interest = 0;
-						    System.out.println("Enter Account Number");
-						    String account_Number=sc.nextLine();
-			        	      do {
-							         if (account_Number.matches("[0-9]{12}"))
-							          {
-								        flag = 0;
-								        break;
-							          }
-							         else {
-								          System.out.println("Enter valid AccountNo: ");
-								          accNumber = sc.nextLine();
-								          flag = 1;
-							              }
-						      } while (flag == 1);
-					    	  long  acc_number = Long.parseLong(account_Number);
 						     System.out.println("Enter the Amount to be deposited");
 						     double amount=Double.parseDouble(sc.nextLine());
 						     System.out.println(" Enter Period ");
-						      double t_period=Double.parseDouble(sc.nextLine());
+						      long t_period=Long.parseLong(sc.nextLine());
 						      int n=0;
 						     if(t_period <=2) {
 						    	   n=1;
@@ -472,37 +460,18 @@ public class TestMain {
 						     
 						     double base=(1+(rate_of_interest /n));
 						     double maturity_value=amount +Math.pow(base,(n* t_period));
-						     depositDao.fixedDeposit(type,amount,rate_of_interest,maturity_value,t_period,status);
+						     depositDao.fixedDeposit(type,amount,rate_of_interest,maturity_value,t_period,status,user_id);
 						     break;
 					   case 2:
-						   System.out.println("Deposit Type");
-							 System.out.println("1.FIXED DEPOSIT \n2.RECURRING DEPOSIT");
-							 System.out.println("Enter your Choice");
+						    
 							 DepositsDao depositsDao=new DepositsDao();
-							  
-							  Choice =Integer.parseInt(sc.nextLine());
-							   switch(Choice)
-							   {
-							   case 1:
-								     rate_of_interest = 0;
-								    System.out.println("Enter Account Number");
-								       account_Number=sc.nextLine();
-					        	      do {
-									         if (account_Number.matches("[0-9]{12}"))
-									          {
-										        flag = 0;
-										        break;
-									          }
-									         else {
-										          System.out.println("Enter valid AccountNo: ");
-										          accNumber = sc.nextLine();
-										          flag = 1;
-									              }
-								      } while (flag == 1);
-							    	  long  acc_num = Long.parseLong(account_Number);
-								     System.out.println("Enter the Amount to be deposited");
-								    amount=Double.parseDouble(sc.nextLine());
-								    t_period=Double.parseDouble(sc.nextLine());
+						     rate_of_interest = 0;
+						     String type1="Recurring Deposit";
+						     String status1="Not Approved";
+						    System.out.println("Enter the Amount to be deposited");
+						    long amount1=Long.parseLong(sc.nextLine());
+						    System.out.println("Enter the period");
+							t_period=Long.parseLong(sc.nextLine());
 								        n=0;
 								     if(t_period <=2) {
 								    	   n=1;
@@ -516,12 +485,12 @@ public class TestMain {
 								    	 System.out.println("invalid Period");
 								     
 								       base=(1+(rate_of_interest /n));
-								       maturity_value=amount +Math.pow(base,(n* t_period));
-								     depositsDao.recurringDeposit( acc_num,amount,rate_of_interest,maturity_value,t_period);
+								       maturity_value=amount1 +Math.pow(base,(n* t_period));
+							     depositsDao.recurringDeposit(type1,amount1,t_period,rate_of_interest,maturity_value,status1,user_id);
 								     break;
 							   }
 					      break;
-				       }
+				        
 				case 5:
 					LoansDao loansDao=new LoansDao();
 					System.out.println("Loan Details");
@@ -531,38 +500,25 @@ public class TestMain {
 					switch(ch)
 					{
 					case 1:
-						  System.out.println("Enter Your Account number");
-						  String account_Number=sc.nextLine();
-		        	      do {
-						         if (account_Number.matches("[0-9]{12}"))
-						          {
-							        flag = 0;
-							        break;
-						          }
-						         else {
-							          System.out.println("Enter valid AccountNo: ");
-							          accNumber = sc.nextLine();
-							          flag = 1;
-						              }
-					      } while (flag == 1);
-				    	  long  acc_number = Long.parseLong(account_Number);
+					     String type="Personal loan";
+					     String status1="Not Approved";
 				    	  System.out.println("Enter Loan amount needed:");
 				    	  double amount=Double.parseDouble(sc.nextLine());
 						  System.out.println(" Enter Period ");
 						  double t_period=Double.parseDouble(sc.nextLine());
 						  System.out.println("Enter your Working Type(Tier-I,Tier-II,Self Employee");
-						  String type=sc.nextLine();
+						  String d_type=sc.nextLine();
 						      int n=0;
 						      double rate_of_interest=0;
-						     if(type.matches("Tier-I")) {
+						     if(d_type.matches("Tier-I")) {
 						    	   n=1;
 						        rate_of_interest  = loansDao.getInterest(3.1);
 						     }
-						     else if(type.matches("Tier-I")) {
+						     else if(d_type.matches("Tier-II")) {
 						    	  n=1;
 						    	 rate_of_interest=loansDao.getInterest(3.2);
 						     }
-						     else if(type.matches("Self Employee")) {
+						     else if(d_type.matches("Self Employee")) {
 						    	 n=1;
 						    	 rate_of_interest=loansDao.getInterest(3.3);
 						     }
@@ -573,8 +529,28 @@ public class TestMain {
 						      
 						      
 						     double r=Math.pow((1+rate_of_interest), numberOfPayments);
-						     double monthly_payment= amount *((r*rate_of_interest)/r-1);
-					//	     loansDao.
+						     double monthly_payment= amount *rate_of_interest*((r)/(r-1));
+						    // System.out.println(monthly_payment);
+					 	     loansDao.PersonalLoan(type,amount,t_period,d_type,rate_of_interest,monthly_payment,user_id,status1);
+					 	     break;
+					case 2:
+						  type="Housing loan";
+					       status1="Not Approved";
+					       d_type="Housing Loan";
+				    	  System.out.println("Enter Loan amount needed:");
+				    	    amount=Double.parseDouble(sc.nextLine());
+						  System.out.println(" Enter Period ");
+						  t_period=Long.parseLong(sc.nextLine());
+						   rate_of_interest=0;rate_of_interest  = loansDao.getInterest(3.3);
+						   System.out.println("Enter No Of Payments (12,18,24)");
+						        numberOfPayments=Integer.parseInt(sc.nextLine());
+						      
+						      
+						      r=Math.pow((1+rate_of_interest), numberOfPayments);
+						      monthly_payment= amount *rate_of_interest*((r)/(r-1));
+						    // System.out.println(monthly_payment);
+					 	     loansDao.housingLoan(type,amount,t_period,d_type,rate_of_interest,monthly_payment,user_id,status1);
+					 	     break;
 						     
 						     
 					}
@@ -679,6 +655,8 @@ public class TestMain {
 					    	 accountDetailDao1.deleteDetails(accuntNo);
 	    				  
 	    				  break;
+	    			  case 5:
+	    				   break;
 					 }
 			 }
 			 else
