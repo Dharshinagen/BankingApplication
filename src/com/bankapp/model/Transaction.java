@@ -7,6 +7,7 @@ public class Transaction {
              private String transaction_type;
              private long amount;
              private long balance;
+             private String transaction_status;
 			public String getIfsc_code() {
 				return ifsc_code;
 			}
@@ -31,12 +32,20 @@ public class Transaction {
 			public void setBalance(long balance) {
 				this.balance = balance;
 			}
-			public Transaction(String ifsc_code, String transaction_type, long amount, long balance) {
+			public String getTransaction_status() {
+				return transaction_status;
+			}
+			public void setTransaction_status(String transaction_status) {
+				this.transaction_status = transaction_status;
+			}
+			public Transaction(String ifsc_code, String transaction_type, long amount, long balance,
+					String transaction_status) {
 				super();
 				this.ifsc_code = ifsc_code;
 				this.transaction_type = transaction_type;
 				this.amount = amount;
 				this.balance = balance;
+				this.transaction_status = transaction_status;
 			}
 			public Transaction() {
 				super();
@@ -44,7 +53,7 @@ public class Transaction {
 			}
 			@Override
 			public int hashCode() {
-				return Objects.hash(amount, balance, ifsc_code, transaction_type);
+				return Objects.hash(amount, balance, ifsc_code, transaction_status, transaction_type);
 			}
 			@Override
 			public boolean equals(Object obj) {
@@ -56,12 +65,14 @@ public class Transaction {
 					return false;
 				Transaction other = (Transaction) obj;
 				return amount == other.amount && balance == other.balance && Objects.equals(ifsc_code, other.ifsc_code)
+						&& Objects.equals(transaction_status, other.transaction_status)
 						&& Objects.equals(transaction_type, other.transaction_type);
 			}
 			@Override
 			public String toString() {
 				return "Transaction [ifsc_code=" + ifsc_code + ", transaction_type=" + transaction_type + ", amount="
-						+ amount + ", balance=" + balance + "]";
+						+ amount + ", balance=" + balance + ", transaction_status=" + transaction_status + "]";
 			}
-             
+
+
 }

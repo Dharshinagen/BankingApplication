@@ -74,4 +74,24 @@ public class AccountDetailsDao {
 			e.printStackTrace();
 		}
 	}
+	
+	public String getUserId(String email)
+	{
+		String query = "select user_id from Account_Details where email = ?";
+		Connection con=ConnectionUtil.getDbConnection();
+		try {
+			PreparedStatement pst= con.prepareStatement(query);
+			pst.setString(1,  email);
+			ResultSet rs=pst.executeQuery();
+			if(rs.next())
+			{
+				return rs.getString("user_id");
+			}else {
+				return null;
+			}
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 }

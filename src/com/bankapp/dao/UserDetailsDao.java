@@ -12,17 +12,18 @@ import com.bankapp.model.UserDetails;
 
 public class UserDetailsDao {
 	public void insertUser(UserDetails user) {
-		String insertQuery = "insert into USER_DETAILS(NAME,EMAIL,PASSWORD,MOBILE_NUMBER) VALUES (?,?,?,?)";
+		String insertQuery = "insert into USER_DETAILS(USER_NAME,EMAIL,USER_PASSWORD,MOBILE_NUMBER,ACCOUNT_ID) VALUES (?,?,?,?,?)";
 
 		Connection con = ConnectionUtil.getDbConnection();
 		PreparedStatement pst = null;
 
 		try {
 			pst = con.prepareStatement(insertQuery);
-			pst.setString(1, user.getName());
+			pst.setString(1, user.getUser_name());
 			pst.setString(2, user.getEmailId());
-			pst.setString(3, user.getPassword());
-			pst.setLong(4, user.getMobileNumber());
+			pst.setString(3, user.getUser_password());
+			pst.setLong(4, user.getMobile_Number());
+			pst.setLong(5, user.getAccount_id());
 			pst.executeUpdate();
 			System.out.println("Value Inserted Successfully");
 
@@ -35,7 +36,7 @@ public class UserDetailsDao {
 	}
 
 	public UserDetails validateUser(String emailId, String password) {
-		String ValidateQuery = "select * from USER_DETAILS where role='USER' and email='" + emailId + "' and password='"
+		String ValidateQuery = "select * from USER_DETAILS where role='USER' and email='" + emailId + "' and user_password='"
 				+ password + "'";
 		Connection con = ConnectionUtil.getDbConnection();
 		UserDetails user = null;
@@ -56,7 +57,7 @@ public class UserDetailsDao {
 
 	public  void updateUser(String name,String password,String email) {
 
-		String updatequery1 = "update user_details set name=?,password=? where email=?";
+		String updatequery1 = "update user_details set user_name=?,user_password=? where email=?";
 		Connection con = ConnectionUtil.getDbConnection();
 
 		try {
@@ -75,7 +76,7 @@ public class UserDetailsDao {
 	}
 
 	public UserDetails admin(String email_id, String password) {
-		String AdminQuery = "select * from user_details where role='ADMIN' and email='" + email_id + "'and password='"
+		String AdminQuery = "select * from user_details where role='ADMIN' and email='" + email_id + "'and user_password='"
 				+ password + "'";
 
 		Connection con = ConnectionUtil.getDbConnection();

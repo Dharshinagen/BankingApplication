@@ -3,7 +3,7 @@ package com.bankapp.model;
 import java.util.Objects;
 
 public class AccountDetails {
-	private int id;
+	private int  user_id;
 	private String account_type;
 	private String account_Holder_name;
 	private String address;
@@ -17,10 +17,10 @@ public class AccountDetails {
 	private int balance;	
 	private int pin_Number;
 	public int getId() {
-		return id;
+		return user_id;
 	}
 	public void setId(int id) {
-		this.id = id;
+		this.user_id = id;
 	}
 	public String getAccount_type() {
 		return account_type;
@@ -98,7 +98,7 @@ public class AccountDetails {
 			int pincode, String dob, long mobile_Number, String email, String ifsc_Code, String branchName, int balance,
 			int pin_Number) {
 		super();
-		this.id = id;
+		this.user_id = id;
 		this.account_type = account_type;
 		this.account_Holder_name = account_Holder_name;
 		this.address = address;
@@ -118,7 +118,7 @@ public class AccountDetails {
 	}
 	@Override
 	public int hashCode() {
-		return Objects.hash(account_Holder_name, account_type, address, balance, branchName, city, dob, email, id,
+		return Objects.hash(account_Holder_name, account_type, address, balance, branchName, city, dob, email, user_id,
 				ifsc_Code, mobile_Number, pin_Number, pincode);
 	}
 	@Override
@@ -134,7 +134,7 @@ public class AccountDetails {
 				&& Objects.equals(account_type, other.account_type) && Objects.equals(address, other.address)
 				&& balance == other.balance && Objects.equals(branchName, other.branchName)
 				&& Objects.equals(city, other.city) && Objects.equals(dob, other.dob)
-				&& Objects.equals(email, other.email) && id == other.id && Objects.equals(ifsc_Code, other.ifsc_Code)
+				&& Objects.equals(email, other.email) && user_id == other.user_id && Objects.equals(ifsc_Code, other.ifsc_Code)
 				&& mobile_Number == other.mobile_Number && pin_Number == other.pin_Number && pincode == other.pincode;
 	}
 	@Override

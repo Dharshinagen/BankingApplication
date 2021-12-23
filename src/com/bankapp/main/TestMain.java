@@ -6,6 +6,8 @@ import java.util.Scanner;
 import com.bankapp.model.AccountDetails;
 import com.bankapp.model.UserDetails;
 import com.bankapp.dao.AccountDetailsDao;
+import com.bankapp.dao.DepositsDao;
+import com.bankapp.dao.LoansDao;
 import com.bankapp.dao.TransactionDao;
 import com.bankapp.dao.UserDetailsDao;
 
@@ -100,8 +102,17 @@ public class TestMain {
 					}
 			} while (flag == 1);
 			long mobileNumber = Long.parseLong(mobile);
-			UserDetails user = new UserDetails(name, email, password, mobileNumber);
-			userDao.insertUser(user);
+			AccountDetailsDao accountsDao = new AccountDetailsDao();
+			String id = accountsDao.getUserId(email);
+			if(null !=id)
+			{
+				Long account_id = Long.parseLong(id);
+				UserDetails user = new UserDetails(name, email, password, mobileNumber, account_id);
+				userDao.insertUser(user);				
+			}
+			else {
+				System.out.println("Invalid Email");
+			}
 			break;
 		case 2:
 			userDao = new UserDetailsDao();
@@ -145,8 +156,8 @@ public class TestMain {
 		
 			if (validUser != null)
 			   {
-				System.out.println("WELCOME\t" + validUser.getName() + "!");
-            	System.out.println("\n1.VIEW ACCOUNT DETAIL \n2.UPDATE YOUR PROFILE \n3.Transaction");
+				System.out.println("WELCOME\t" + validUser.getUser_name() + "!");
+            	System.out.println("\n1.VIEW ACCOUNT DETAIL \n2.UPDATE YOUR PROFILE \n3.Transaction \n4.DepositType \n5.Loans");
 				System.out.println("ENTER YOUR CHOICE");
                 int Choice = Integer.parseInt(sc.nextLine());
 				switch (Choice) 
@@ -290,7 +301,7 @@ public class TestMain {
 					        	    	     {
 					        	    	    	 System.out.println("Enter Amount Greater Than 200");
 					        	    	    	 System.out.println("Enter the Amount to Deposit");
-									        	 amount=sc.nextDouble();
+									        	 amount=Double.parseDouble(sc.nextLine());
 									        	  flag=1;
 					        	    	     }
 					        	     }while(flag==1);
@@ -345,7 +356,7 @@ public class TestMain {
 								      } while (flag == 1);
 							    	  long  acc_num = Long.parseLong(account_Number);
 								        System.out.println("Enter the Amount to withdraw");
-						        	     amount=sc.nextDouble();
+						        	     amount=Double.parseDouble(sc.nextLine());
 						        	     do {
 						        	    	     if(amount>=500)
 						        	    	     {
@@ -410,18 +421,171 @@ public class TestMain {
 								              }
 		     					  } while (flag == 1);
 							        pin_Number = Integer.parseInt(pinNo);
-							        
+							       double balance= transDao.viewBalance(acc_number, pin_Number);
+							       System.out.println("BALANCE : "+balance);
 					        	 break;
 					    }
 					  break;
+				case 4:
+					 System.out.println("Deposit Type");
+					 System.out.println("1.FIXED DEPOSIT \n2.RECURRING DEPOSIT");
+					 System.out.println("Enter your Choice");
+					 DepositsDao depositDao=new DepositsDao();
+					  
+					  Choice =Integer.parseInt(sc.nextLine());
+					   switch(Choice)
+					   {
+					   case 1:
+						   String type="Fixed Deposit";
+						   String status="not deposited";
+						    double rate_of_interest = 0;
+						    System.out.println("Enter Account Number");
+						    String account_Number=sc.nextLine();
+			        	      do {
+							         if (account_Number.matches("[0-9]{12}"))
+							          {
+								        flag = 0;
+								        break;
+							          }
+							         else {
+								          System.out.println("Enter valid AccountNo: ");
+								          accNumber = sc.nextLine();
+								          flag = 1;
+							              }
+						      } while (flag == 1);
+					    	  long  acc_number = Long.parseLong(account_Number);
+						     System.out.println("Enter the Amount to be deposited");
+						     double amount=Double.parseDouble(sc.nextLine());
+						     System.out.println(" Enter Period ");
+						      double t_period=Double.parseDouble(sc.nextLine());
+						      int n=0;
+						     if(t_period <=2) {
+						    	   n=1;
+						        rate_of_interest  = depositDao.getInterest(1.1);
+						     }
+						     else if(t_period >2) {
+						    	  n=1;
+						    	 rate_of_interest=depositDao.getInterest(1.2);
+						     }
+						     else
+						    	 System.out.println("invalid Period");
+						     
+						     double base=(1+(rate_of_interest /n));
+						     double maturity_value=amount +Math.pow(base,(n* t_period));
+						     depositDao.fixedDeposit(type,amount,rate_of_interest,maturity_value,t_period,status);
+						     break;
+					   case 2:
+						   System.out.println("Deposit Type");
+							 System.out.println("1.FIXED DEPOSIT \n2.RECURRING DEPOSIT");
+							 System.out.println("Enter your Choice");
+							 DepositsDao depositsDao=new DepositsDao();
+							  
+							  Choice =Integer.parseInt(sc.nextLine());
+							   switch(Choice)
+							   {
+							   case 1:
+								     rate_of_interest = 0;
+								    System.out.println("Enter Account Number");
+								       account_Number=sc.nextLine();
+					        	      do {
+									         if (account_Number.matches("[0-9]{12}"))
+									          {
+										        flag = 0;
+										        break;
+									          }
+									         else {
+										          System.out.println("Enter valid AccountNo: ");
+										          accNumber = sc.nextLine();
+										          flag = 1;
+									              }
+								      } while (flag == 1);
+							    	  long  acc_num = Long.parseLong(account_Number);
+								     System.out.println("Enter the Amount to be deposited");
+								    amount=Double.parseDouble(sc.nextLine());
+								    t_period=Double.parseDouble(sc.nextLine());
+								        n=0;
+								     if(t_period <=2) {
+								    	   n=1;
+								        rate_of_interest  = depositDao.getInterest(2.1);
+								     }
+								     else if(t_period >2) {
+								    	  n=1;
+								    	 rate_of_interest=depositDao.getInterest(2.2);
+								     }
+								     else
+								    	 System.out.println("invalid Period");
+								     
+								       base=(1+(rate_of_interest /n));
+								       maturity_value=amount +Math.pow(base,(n* t_period));
+								     depositsDao.recurringDeposit( acc_num,amount,rate_of_interest,maturity_value,t_period);
+								     break;
+							   }
+					      break;
+				       }
+				case 5:
+					LoansDao loansDao=new LoansDao();
+					System.out.println("Loan Details");
+					System.out.println("\n1.Personal Loan\n2.Housing Loan");
+					System.out.println("Enter your Choice");
+					int ch=Integer.parseInt(sc.nextLine());
+					switch(ch)
+					{
+					case 1:
+						  System.out.println("Enter Your Account number");
+						  String account_Number=sc.nextLine();
+		        	      do {
+						         if (account_Number.matches("[0-9]{12}"))
+						          {
+							        flag = 0;
+							        break;
+						          }
+						         else {
+							          System.out.println("Enter valid AccountNo: ");
+							          accNumber = sc.nextLine();
+							          flag = 1;
+						              }
+					      } while (flag == 1);
+				    	  long  acc_number = Long.parseLong(account_Number);
+				    	  System.out.println("Enter Loan amount needed:");
+				    	  double amount=Double.parseDouble(sc.nextLine());
+						  System.out.println(" Enter Period ");
+						  double t_period=Double.parseDouble(sc.nextLine());
+						  System.out.println("Enter your Working Type(Tier-I,Tier-II,Self Employee");
+						  String type=sc.nextLine();
+						      int n=0;
+						      double rate_of_interest=0;
+						     if(type.matches("Tier-I")) {
+						    	   n=1;
+						        rate_of_interest  = loansDao.getInterest(3.1);
+						     }
+						     else if(type.matches("Tier-I")) {
+						    	  n=1;
+						    	 rate_of_interest=loansDao.getInterest(3.2);
+						     }
+						     else if(type.matches("Self Employee")) {
+						    	 n=1;
+						    	 rate_of_interest=loansDao.getInterest(3.3);
+						     }
+						     else
+						    	 System.out.println("invalid Period");
+						     System.out.println("Enter No Of Payments (12,18,24)");
+						      double numberOfPayments=Integer.parseInt(sc.nextLine());
+						      
+						      
+						     double r=Math.pow((1+rate_of_interest), numberOfPayments);
+						     double monthly_payment= amount *((r*rate_of_interest)/r-1);
+					//	     loansDao.
+						     
+						     
+					}
+					break;
 				 }
-				 
-			   } //if current user
+			   }//if current user
 			   
 			 else if(ValidAdmin !=null) 
 			 {
-				  System.out.println("WELCOME\t" + ValidAdmin.getName() + "!");
-	            	System.out.println("\n1.VIEW ALL REGISTERED USER  \n2.DELETE USER \n3.UPDATE ACCOUNT DETAILS \n4.DELETE ACCOUNT");
+				  System.out.println("WELCOME\t" + ValidAdmin.getUser_name() + "!");
+	            	System.out.println("\n1.VIEW ALL REGISTERED USER  \n2.CANCEL USER \n3.UPDATE ACCOUNT DETAILS \n4.CANCEL ACCOUNT");
 					System.out.println("ENTER YOUR CHOICE");
 	                int Choice = Integer.parseInt(sc.nextLine());
 	                userDao=null;
