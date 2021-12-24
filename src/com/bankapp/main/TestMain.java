@@ -259,7 +259,7 @@ public class TestMain {
 				case 3:
 				 TransactionDao	 transDao = new TransactionDao();
 					System.out.println("Transaction");
-					System.out.println("\n1.Deposit Amount \n2. Withdraw Amount \n3.View Balance" );
+					System.out.println("\n1.Transfer Amount \n2. Withdraw Amount \n3.View Balance" );
 					System.out.println("Enter Your Choice");
 					choice = Integer.parseInt(sc.nextLine());
 					    switch(choice) {
@@ -457,9 +457,9 @@ public class TestMain {
 						     }
 						     else
 						    	 System.out.println("invalid Period");
-						     
-						     double base=(1+(rate_of_interest /n));
-						     double maturity_value=amount +Math.pow(base,(n* t_period));
+						     double rt=rate_of_interest/100;
+						     double base=(1+( rt /n));
+						     double maturity_value=amount *Math.pow(base,(n* t_period));
 						     depositDao.fixedDeposit(type,amount,rate_of_interest,maturity_value,t_period,status,user_id);
 						     break;
 					   case 2:
@@ -483,9 +483,9 @@ public class TestMain {
 								     }
 								     else
 								    	 System.out.println("invalid Period");
-								     
-								       base=(1+(rate_of_interest /n));
-								       maturity_value=amount1 +Math.pow(base,(n* t_period));
+								       rt=rate_of_interest/100;
+								       base=(1+(rt /n));
+								       maturity_value=amount1 * Math.pow(base,(n* t_period));
 							     depositsDao.recurringDeposit(type1,amount1,t_period,rate_of_interest,maturity_value,status1,user_id);
 								     break;
 							   }
@@ -527,9 +527,9 @@ public class TestMain {
 						     System.out.println("Enter No Of Payments (12,18,24)");
 						      double numberOfPayments=Integer.parseInt(sc.nextLine());
 						      
-						      
-						     double r=Math.pow((1+rate_of_interest), numberOfPayments);
-						     double monthly_payment= amount *rate_of_interest*((r)/(r-1));
+						      double rt=rate_of_interest/100;
+						     double r=Math.pow((1+rt), numberOfPayments);
+						     double monthly_payment= amount *rt*((r)/(r-1));
 						    // System.out.println(monthly_payment);
 					 	     loansDao.PersonalLoan(type,amount,t_period,d_type,rate_of_interest,monthly_payment,user_id,status1);
 					 	     break;
@@ -541,15 +541,16 @@ public class TestMain {
 				    	    amount=Double.parseDouble(sc.nextLine());
 						  System.out.println(" Enter Period ");
 						  t_period=Long.parseLong(sc.nextLine());
-						   rate_of_interest=0;rate_of_interest  = loansDao.getInterest(3.3);
+						   rate_of_interest=0;
+						   rate_of_interest  = loansDao.getInterest(3.3);
 						   System.out.println("Enter No Of Payments (12,18,24)");
 						        numberOfPayments=Integer.parseInt(sc.nextLine());
+						        rt=rate_of_interest/100;
 						      
-						      
-						      r=Math.pow((1+rate_of_interest), numberOfPayments);
-						      monthly_payment= amount *rate_of_interest*((r)/(r-1));
+						      r=Math.pow((1+rt), numberOfPayments);
+						      monthly_payment= amount *rt*((r)/(r-1));
 						    // System.out.println(monthly_payment);
-					 	     loansDao.housingLoan(type,amount,t_period,d_type,rate_of_interest,monthly_payment,user_id,status1);
+					 	    loansDao.housingLoan(type,amount,t_period,d_type,rate_of_interest,monthly_payment,user_id,status1);
 					 	     break;
 						     
 						     
@@ -656,6 +657,20 @@ public class TestMain {
 	    				  
 	    				  break;
 	    			  case 5:
+	    				   System.out.println("Approve Loans");
+	    				   System.out.println("1.view Loan number\n 2.Approve Status");
+	    				   System.out.println("Enter your choice:");
+	    				   int Ch=Integer.parseInt(sc.nextLine());
+	    				    switch(Ch)
+	    				    {
+	    				    case 1:
+	    				    	LoansDao loansDao=new LoansDao();
+	    				    	  System.out.println("All Users");
+	    				    	  List<UserDetails> loans  = loansDao.viewloan();
+	  	    				    for(int i=0;i< userList.size();i++) {
+	  	    				    	System.out.println(userList.get(i));
+	  	    				    }
+	    				    }
 	    				   break;
 					 }
 			 }
