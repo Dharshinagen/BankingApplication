@@ -112,10 +112,10 @@ public class AccountDetails {
 		this.balance = balance;
 		this.pin_Number = pin_Number;
 	}
-	public AccountDetails() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+	  
+	 
+
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(account_Holder_name, account_type, address, balance, branchName, city, dob, email, user_id,

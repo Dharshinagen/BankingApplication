@@ -8,54 +8,9 @@ public class UserDetails {
 	private String emailId;
 	private String user_password;
 	private long mobile_Number;
-	private long account_id;
 
 	public int getUser_id() {
 		return user_id;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(account_id, emailId, mobile_Number, user_id, user_name, user_password);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UserDetails other = (UserDetails) obj;
-		return account_id == other.account_id && Objects.equals(emailId, other.emailId)
-				&& mobile_Number == other.mobile_Number && user_id == other.user_id
-				&& Objects.equals(user_name, other.user_name) && Objects.equals(user_password, other.user_password);
-	}
-
-	public UserDetails() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
-
-	public UserDetails(int user_id, String user_name, String emailId, String user_password, long mobile_Number,
-			long account_id) {
-		super();
-		this.user_id = user_id;
-		this.user_name = user_name;
-		this.emailId = emailId;
-		this.user_password = user_password;
-		this.mobile_Number = mobile_Number;
-		this.account_id = account_id;
-	}
-
-	public UserDetails(String user_name, String emailId, String user_password, long mobile_Number, Long account_id) {
-		super();
-		this.user_name = user_name;
-		this.emailId = emailId;
-		this.user_password = user_password;
-		this.mobile_Number = mobile_Number;
-		this.account_id = account_id;
 	}
 
 	public void setUser_id(int user_id) {
@@ -93,13 +48,47 @@ public class UserDetails {
 	public void setMobile_Number(long mobile_Number) {
 		this.mobile_Number = mobile_Number;
 	}
-
-	public long getAccount_id() {
-		return account_id;
+     
+	public UserDetails(int user_id, String user_name, String emailId, String user_password, long mobile_Number) {
+		super();
+		this.user_id = user_id;
+		this.user_name = user_name;
+		this.emailId = emailId;
+		this.user_password = user_password;
+		this.mobile_Number = mobile_Number;
+	}
+	public UserDetails( String user_name, String emailId, String user_password, long mobile_Number) {
+		super();
+		 
+		this.user_name = user_name;
+		this.emailId = emailId;
+		this.user_password = user_password;
+		this.mobile_Number = mobile_Number;
 	}
 
-	public void setAccount_id(long account_id) {
-		this.account_id = account_id;
+	public UserDetails() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(emailId, mobile_Number, user_id, user_name, user_password);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		UserDetails other = (UserDetails) obj;
+		return Objects.equals(emailId, other.emailId) && mobile_Number == other.mobile_Number
+				&& user_id == other.user_id && Objects.equals(user_name, other.user_name)
+				&& Objects.equals(user_password, other.user_password);
 	}
 
 	@Override

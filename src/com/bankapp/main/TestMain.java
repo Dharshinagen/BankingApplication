@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import com.bankapp.model.AccountDetails;
+import com.bankapp.model.Loans;
 import com.bankapp.model.UserDetails;
 import com.bankapp.dao.AccountDetailsDao;
 import com.bankapp.dao.DepositsDao;
@@ -109,7 +110,7 @@ public class TestMain {
 			if( id !=null )
 			{
 				Long account_id = Long.parseLong(id);
-				UserDetails user = new UserDetails(name, email, password, mobileNumber, account_id);
+				UserDetails user = new UserDetails(name, email, password, mobileNumber);
 				userDao.insertUser(user);				
 			}
 			else {
@@ -339,11 +340,25 @@ public class TestMain {
 									              }
 								      } while (flag == 1);
 							    	  long  receiver_AccountNo = Long.parseLong(receiver_Account_Number );
-							    	  transDao.depositAmount(Sender_accuntNo,amount,pin_Number,receiver_AccountNo );
+							    	  transDao.depositAmount(Sender_accuntNo,name,amount,pin_Number,receiver_AccountNo );
 					        	   
 					        	      break;
 					         case 2:
 					        	      System.out.println("Withdraw Amount");
+					        	      System.out.println("Enter your name");
+						        	   name=sc.nextLine();
+						        	   do {
+						 				      if (name.matches("[A-Za-z]{5,}"))
+						 				        {
+						 					       flag = 0;
+						 				           break;
+						 				        } 
+						 				      else {
+						 					       System.out.println("Enter valid name ");
+						 				           name = sc.nextLine();
+						 				           flag = 1;
+						 				           } 
+						 			      } while (flag == 1);
 					        	      System.out.println("Enter Account Number");
 					        	      String account_Number=sc.nextLine();
 					        	      do {
@@ -390,7 +405,7 @@ public class TestMain {
 										              }
 				     					  } while (flag == 1);
 									        pin_Number = Integer.parseInt(pinNo);
-									        transDao.withdrawAmount(acc_num, amount, pin_Number);
+									        transDao.withdrawAmount(name,acc_num, amount, pin_Number);
 									        
 					        	      break;
 					         case 3:
@@ -457,7 +472,7 @@ public class TestMain {
 						     }
 						     else
 						    	 System.out.println("invalid Period");
-						     double rt=rate_of_interest/100;
+						     double rt=(rate_of_interest/(12*100));
 						     double base=(1+( rt /n));
 						     double maturity_value=amount *Math.pow(base,(n* t_period));
 						     depositDao.fixedDeposit(type,amount,rate_of_interest,maturity_value,t_period,status,user_id);
@@ -483,7 +498,7 @@ public class TestMain {
 								     }
 								     else
 								    	 System.out.println("invalid Period");
-								       rt=rate_of_interest/100;
+								       rt=(rate_of_interest/(12*100));
 								       base=(1+(rt /n));
 								       maturity_value=amount1 * Math.pow(base,(n* t_period));
 							     depositsDao.recurringDeposit(type1,amount1,t_period,rate_of_interest,maturity_value,status1,user_id);
@@ -506,7 +521,8 @@ public class TestMain {
 				    	  double amount=Double.parseDouble(sc.nextLine());
 						  System.out.println(" Enter Period ");
 						  double t_period=Double.parseDouble(sc.nextLine());
-						  System.out.println("Enter your Working Type(Tier-I,Tier-II,Self Employee");
+						  double numberOfPayments=t_period*12;
+						  System.out.println("Enter your Working Type(Tier-I,Tier-II,Self Employee):");
 						  String d_type=sc.nextLine();
 						      int n=0;
 						      double rate_of_interest=0;
@@ -524,14 +540,13 @@ public class TestMain {
 						     }
 						     else
 						    	 System.out.println("invalid Period");
-						     System.out.println("Enter No Of Payments (12,18,24)");
-						      double numberOfPayments=Integer.parseInt(sc.nextLine());
 						      
-						      double rt=rate_of_interest/100;
+						      
+						      double rt=(rate_of_interest/(12*100));
 						     double r=Math.pow((1+rt), numberOfPayments);
 						     double monthly_payment= amount *rt*((r)/(r-1));
-						    // System.out.println(monthly_payment);
-					 	     loansDao.PersonalLoan(type,amount,t_period,d_type,rate_of_interest,monthly_payment,user_id,status1);
+						   //  System.out.println(monthly_payment);
+					 	    loansDao.PersonalLoan(type,amount,t_period,d_type,rate_of_interest,monthly_payment,user_id,status1);
 					 	     break;
 					case 2:
 						  type="Housing loan";
@@ -545,7 +560,7 @@ public class TestMain {
 						   rate_of_interest  = loansDao.getInterest(3.3);
 						   System.out.println("Enter No Of Payments (12,18,24)");
 						        numberOfPayments=Integer.parseInt(sc.nextLine());
-						        rt=rate_of_interest/100;
+						        rt=(rate_of_interest/(12*100));
 						      
 						      r=Math.pow((1+rt), numberOfPayments);
 						      monthly_payment= amount *rt*((r)/(r-1));
@@ -562,7 +577,7 @@ public class TestMain {
 			 else if(ValidAdmin !=null) 
 			 {
 				  System.out.println("WELCOME\t" + ValidAdmin.getUser_name() + "!");
-	            	System.out.println("\n1.VIEW ALL REGISTERED USER  \n2.CANCEL USER \n3.UPDATE ACCOUNT DETAILS \n4.CANCEL ACCOUNT");
+	            	System.out.println("\n1.VIEW ALL REGISTERED USER  \n2.CANCEL USER \n3.UPDATE ACCOUNT DETAILS \n4.CANCEL ACCOUNT \n5.APPROVE LOAN");
 					System.out.println("ENTER YOUR CHOICE");
 	                int Choice = Integer.parseInt(sc.nextLine());
 	                userDao=null;
@@ -661,15 +676,37 @@ public class TestMain {
 	    				   System.out.println("1.view Loan number\n 2.Approve Status");
 	    				   System.out.println("Enter your choice:");
 	    				   int Ch=Integer.parseInt(sc.nextLine());
+	    				   LoansDao loansDao=null;
 	    				    switch(Ch)
 	    				    {
 	    				    case 1:
-	    				    	LoansDao loansDao=new LoansDao();
+	    				    	  loansDao=new LoansDao();
 	    				    	  System.out.println("All Users");
-	    				    	  List<UserDetails> loans  = loansDao.viewloan();
-	  	    				    for(int i=0;i< userList.size();i++) {
-	  	    				    	System.out.println(userList.get(i));
+	    				    	  List<Loans> loans  = loansDao.viewloan();
+	  	    				    for(int i=0;i<loans.size();i++) {
+	  	    				    	System.out.println(loans.get(i));
+	  	    				    
 	  	    				    }
+	  	    				    break;
+	    				    case 2:
+	    				    	loansDao=new LoansDao();
+	    				    	System.out.println("Enter your Loan number:");
+					        	   String accountNumber=sc.nextLine();
+					        	   do {
+									      if (accountNumber.matches("[0-9]{14}"))
+									         {
+										      flag = 0;
+										      break;
+									         }
+									      else {
+										     System.out.println("Enter valid  LoanNo: ");
+										     accountNumber = sc.nextLine();
+										     flag = 1;
+									         }
+								     } while (flag == 1);
+							    	 long   loanNo = Long.parseLong(accountNumber);
+							    	 loansDao.updateStatus(loanNo);	    				    	
+	    				    	break;
 	    				    }
 	    				   break;
 					 }

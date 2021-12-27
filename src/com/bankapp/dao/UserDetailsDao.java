@@ -12,7 +12,7 @@ import com.bankapp.model.UserDetails;
 
 public class UserDetailsDao {
 	public void insertUser(UserDetails user) {
-		String insertQuery = "insert into USER_DETAILS(USER_NAME,EMAIL,USER_PASSWORD,MOBILE_NUMBER,ACCOUNT_ID) VALUES (?,?,?,?,?)";
+		String insertQuery = "insert into USER_DETAILS(USER_NAME,EMAIL,USER_PASSWORD,MOBILE_NUMBER) VALUES (?,?,?,?)";
 
 		Connection con = ConnectionUtil.getDbConnection();
 		PreparedStatement pst = null;
@@ -23,7 +23,7 @@ public class UserDetailsDao {
 			pst.setString(2, user.getEmailId());
 			pst.setString(3, user.getUser_password());
 			pst.setLong(4, user.getMobile_Number());
-			pst.setLong(5, user.getAccount_id());
+			 
 			pst.executeUpdate();
 			System.out.println("Value Inserted Successfully");
 
@@ -44,8 +44,7 @@ public class UserDetailsDao {
 			Statement st = con.createStatement();
 			ResultSet rs = st.executeQuery(ValidateQuery);
 			if (rs.next()) {
-				user = new UserDetails(rs.getInt(1), rs.getString(2), emailId, password, rs.getLong(5),
-						rs.getLong(7));
+				user = new UserDetails(rs.getInt(1), rs.getString(2), emailId, password, rs.getLong(5));
 			}
 
 		} catch (SQLException e) {
@@ -86,8 +85,7 @@ public class UserDetailsDao {
 			Statement stm = con.createStatement();
 			ResultSet rs = stm.executeQuery(AdminQuery);
 			if (rs.next()) {
-				user1 = new UserDetails(rs.getInt(1), rs.getString(2), email_id, password, rs.getLong(5),
-						rs.getLong(7));;
+				user1 = new UserDetails(rs.getInt(1), rs.getString(2), email_id, password, rs.getLong(5));
 			}
 
 		} catch (SQLException e) {
@@ -104,8 +102,7 @@ public class UserDetailsDao {
 			Statement st=con.createStatement();
 			ResultSet rs=st.executeQuery(view);
 			while(rs.next()) {
-				UserDetails user=new UserDetails(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getLong(5),
-						rs.getLong(7));;
+				UserDetails user=new UserDetails(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getLong(5) );
 				userList.add(user);
 			}
 		} catch (SQLException e) {

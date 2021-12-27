@@ -87,22 +87,35 @@ public class LoansDao {
 			}
 	}
 	public List<Loans> viewloan(){
-		List<Loans> userList=new ArrayList<Loans>();
-		String view1="select LOAN_NUMBER from loans  where  LOAN_status='not approved'";
+		List<Loans> loans=new ArrayList<Loans>();
+		String view1="select * from LOANS  where  LOAN_STATUS='Not Approved'";
 		Connection con1=ConnectionUtil.getDbConnection();
 		 try {
 			Statement st=con1.createStatement();
 			ResultSet rs=st.executeQuery(view1);
 			while(rs.next()) {
-				Loans user=new Loans(rs.getString(1),rs.getString(2),rs.getDouble(3),rs.getString(4),rs.getDouble(5),rs.getDouble(6),rs.getString(7),rs.getString(8)) ;
-				userList.add(user);
+				Loans loan=new Loans(rs.getInt(2),rs.getLong(3), rs.getString(5),rs.getString(6),rs.getDouble(7),rs.getString(8),rs.getDouble(9),rs.getDouble(10),rs.getString(11));
+				loans.add(loan);
 			}
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		return userList;
+		return loans;
+	}
+	public void updateStatus(long loan_number) {
+		String que="UPDATE LOANS SET LOAN_STATUS='Approved' WHERE LOAN_NUMBER=?";
+		Connection con=ConnectionUtil.getDbConnection();
+		 try {
+			PreparedStatement pst = con.prepareStatement(que);
+			pst.setLong(1,loan_number);
+			int i = pst.executeUpdate();
+			System.out.println(i + " user profile updated");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
